@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://cykingz010.github.io</id>
+    <title>Gridea</title>
+    <updated>2020-10-02T14:31:16.211Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://cykingz010.github.io"/>
+    <link rel="self" href="https://cykingz010.github.io/atom.xml"/>
+    <subtitle>温故而知新</subtitle>
+    <logo>https://cykingz010.github.io/images/avatar.png</logo>
+    <icon>https://cykingz010.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2020, Gridea</rights>
+    <entry>
+        <title type="html"><![CDATA[2020.10.2 ]]></title>
+        <id>https://cykingz010.github.io/post/2020102/</id>
+        <link href="https://cykingz010.github.io/post/2020102/">
+        </link>
+        <updated>2020-10-02T15:27:11.000Z</updated>
+        <content type="html"><![CDATA[<p>今日进度：<br>
+·完成了环境配置<br>
+·开始学习网络课程 ：https://www.coursera.org/learn/machine-learning</p>
+]]></content>
+    </entry>
+</feed>

@@ -1,0 +1,247 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>2020.10.04 | Gridea</title>
+<link rel="shortcut icon" href="https://cykingz010.github.io/favicon.ico?v=1601820569314">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cykingz010.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="2020.10.04 | Gridea - Atom Feed" href="https://cykingz010.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="开始尝试利用Keras测试MNIST数据集
+为啥不用TF呢，因为我没研究明白...
+今天遇到的问题: 环境里明明装了Keras，但是许多源码无法使用
+以为是没有安装，再次pip install keras后发现安装过了
+接下来下载MNIST..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://cykingz010.github.io">
+  <img class="avatar" src="https://cykingz010.github.io/images/avatar.png?v=1601820569314" alt="">
+  </a>
+  <h1 class="site-title">
+    Gridea
+  </h1>
+  <p class="site-description">
+    温故而知新
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              2020.10.04
+            </h2>
+            <div class="post-info">
+              <span>
+                2020-10-05
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>开始尝试利用Keras测试MNIST数据集<br>
+为啥不用TF呢，因为我没研究明白...</p>
+<p>今天遇到的问题: 环境里明明装了Keras，但是许多源码无法使用<br>
+以为是没有安装，再次pip install keras后发现安装过了</p>
+<p>接下来下载MNIST数据集</p>
+<h1 id="plot-ad-hoc-mnist-instances">Plot ad hoc mnist instances</h1>
+<p>from keras.datasets import mnist<br>
+import matplotlib.pyplot as plt</p>
+<h1 id="load-downloaded-if-needed-the-mnist-dataset">load (downloaded if needed) the MNIST dataset</h1>
+<p>(X_train, y_train), (X_test, y_test) = mnist.load_data()</p>
+<h1 id="plot-4-images-as-gray-scale">plot 4 images as gray scale</h1>
+<p>plt.subplot(221)<br>
+plt.imshow(X_train[0], cmap=plt.get_cmap('gray'))<br>
+plt.subplot(222)<br>
+plt.imshow(X_train[1], cmap=plt.get_cmap('gray'))<br>
+plt.subplot(223)<br>
+plt.imshow(X_train[2], cmap=plt.get_cmap('gray'))<br>
+plt.subplot(224)<br>
+plt.imshow(X_train[3], cmap=plt.get_cmap('gray'))</p>
+<h1 id="show-the-plot">show the plot</h1>
+<p>plt.show()</p>
+<p>仍然报错，再次确认import tensorflow.keras  仍然没问题</p>
+<p>无奈之下，将最初的from keras.datasets import mnist变成了from tensorflow.keras.datasets<br>
+成功</p>
+<p>之后我们尝试利用NN来训练，Keras自带的NN<br>
+mport numpy   #导入数据库<br>
+from keras.datasets import mnist<br>
+from keras.models import Sequential<br>
+from keras.layers import Dense<br>
+from keras.layers import Dropout<br>
+from keras.utils import np_utils</p>
+<p>seed = 7   #设置随机种子<br>
+numpy.random.seed(seed)</p>
+<p>(X_train, y_train), (X_test, y_test) = mnist.load_data() #加载数据</p>
+<p>num_pixels = X_train.shape[1] * X_train.shape[2]<br>
+X_train = X_train.reshape(X_train.shape[0], num_pixels).astype('float32')<br>
+X_test = X_test.reshape(X_test.shape[0], num_pixels).astype('float32')<br>
+#数据集是3维的向量（instance length,width,height).对于多层感知机，模型的输入是二维的向量，因此这<br>
+#里需要将数据集reshape，即将28*28的向量转成784长度的数组。可以用numpy的reshape函数轻松实现这个过<br>
+#程。</p>
+<p>#给定的像素的灰度值在0-255，为了使模型的训练效果更好，通常将数值归一化映射到0-1。<br>
+X_train = X_train / 255<br>
+X_test = X_test / 255</p>
+<p>#最后，模型的输出是对每个类别的打分预测，对于分类结果从0-9的每个类别都有一个预测分值，表示将模型<br>
+#输入预测为该类的概率大小，概率越大可信度越高。由于原始的数据标签是0-9的整数值，通常将其表示成#0ne-hot向量。如第一个训练数据的标签为5，one-hot表示为[0,0,0,0,0,1,0,0,0,0]。</p>
+<p>y_train = np_utils.to_categorical(y_train)<br>
+y_test = np_utils.to_categorical(y_test)<br>
+num_classes = y_test.shape[1]</p>
+<p>#现在需要做得就是搭建神经网络模型了，创建一个函数，建立含有一个隐层的神经网络。</p>
+<h1 id="define-baseline-model">define baseline model</h1>
+<p>def baseline_model():<br>
+# create model<br>
+model = Sequential()<br>
+model.add(Dense(num_pixels, input_dim=num_pixels, kernel_initializer='normal', activation='relu'))<br>
+model.add(Dense(num_classes, kernel_initializer='normal', activation='softmax'))<br>
+# Compile model<br>
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])<br>
+return model</p>
+<p>#型的隐含层含有784个节点，接受的输入长度也是784（28*28），最后用softmax函数将预测结果转换为标签<br>
+#的概率值。<br>
+#将训练数据fit到模型，设置了迭代轮数，每轮200个训练样本，将测试集作为验证集，并查看训练的效果。</p>
+<h1 id="build-the-model">build the model</h1>
+<p>model = baseline_model()</p>
+<h1 id="fit-the-model">Fit the model</h1>
+<p>model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=10, batch_size=200, verbose=2)</p>
+<h1 id="final-evaluation-of-the-model">Final evaluation of the model</h1>
+<p>scores = model.evaluate(X_test, y_test, verbose=0)<br>
+print(&quot;Baseline Error: %.2f%%&quot; % (100-scores[1]*100))</p>
+<p>结果报错。NP_utils永远无法找到</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#plot-ad-hoc-mnist-instances">Plot ad hoc mnist instances</a></li>
+<li><a href="#load-downloaded-if-needed-the-mnist-dataset">load (downloaded if needed) the MNIST dataset</a></li>
+<li><a href="#plot-4-images-as-gray-scale">plot 4 images as gray scale</a></li>
+<li><a href="#show-the-plot">show the plot</a></li>
+<li><a href="#define-baseline-model">define baseline model</a></li>
+<li><a href="#build-the-model">build the model</a></li>
+<li><a href="#fit-the-model">Fit the model</a></li>
+<li><a href="#final-evaluation-of-the-model">Final evaluation of the model</a></li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://cykingz010.github.io/post/2020102/">
+              <h3 class="post-title">
+                2020.10.2 
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://cykingz010.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
